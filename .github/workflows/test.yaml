@@ -20,7 +20,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ secrets.iam-role-to-ecr-access }}
+        role-to-assume: ${{ secrets.AWS_ROLE_ECR_ACCESS }}
         aws-region: us-east-2
 
     - name: Login to Amazon ECR Private
