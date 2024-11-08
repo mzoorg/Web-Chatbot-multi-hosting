@@ -1,0 +1,32 @@
+on:
+  workflow_call:
+    inputs:
+      webchatbot-ecr-repo:
+        required: true
+        type: string
+
+jobs:
+  reusable_build_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.iam-role-to-ecr-access }}
+        aws-region: us-east-2
+
+    - name: Login to Amazon ECR Private
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ inputs.webchatbot-ecr-repo }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build --file ./client/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ./client
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
