@@ -1,7 +1,5 @@
-# on:
-#   push:
-#     branches:
-#     - dev
+on:
+  workflow_call:
 
 jobs:
 

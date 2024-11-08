@@ -1,12 +1,10 @@
 name: Docker Image CI
 
-# on:
-#   push:
-#     branches:
-#     - master
 on:
-  workflow_call:
-
+  push:
+    branches:
+    - master
+  
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -22,10 +20,8 @@ jobs:
       - run: echo "Tests running for server"
 
   build:
-    - name: Build, tag, and push docker image to Amazon ECR
-      uses: ./.github/workflows/buildapp.yml
-      with:
-        ecr-registry: ${{ steps.login-ecr.outputs.registry }}
-      strategy:
-        matrix:
-          webchatbot-ecr-repo: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
+    name: Build, tag, and push app docker images
+    uses: ./.github/workflows/buildapp.yml
+    strategy:
+      matrix:
+        webchatbot-ecr-repo: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
