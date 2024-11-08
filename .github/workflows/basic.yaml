@@ -21,8 +21,10 @@ jobs:
       - run: echo "Tests running for server"
 
   build:
-    name: Build, tag, and push app docker images
-    uses: ./.github/workflows/buildapp.yaml
     strategy:
       matrix:
-        webchatbot-ecr-repo: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
+        repos_list: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
+    name: Build, tag, and push app docker images
+    uses: ./.github/workflows/buildapp.yaml
+    with:
+      webchatbot-ecr-repo: ${{ matrix.repos_list }}
