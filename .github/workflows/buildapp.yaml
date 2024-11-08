@@ -7,6 +7,9 @@ on:
 
 jobs:
   reusable_build_job:
+    permissions:
+        id-token: write
+        contents: read
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repo

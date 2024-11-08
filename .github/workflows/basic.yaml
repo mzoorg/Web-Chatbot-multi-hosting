@@ -17,7 +17,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '10.19.0'
+
       - run: npm ci
+        working-directory: ./server
+
       - run: echo "Tests running for server"
 
   build:
@@ -28,3 +31,4 @@ jobs:
     uses: ./.github/workflows/buildapp.yaml
     with:
       webchatbot-ecr-repo: ${{ matrix.repos_list }}
+    secrets: inherit
