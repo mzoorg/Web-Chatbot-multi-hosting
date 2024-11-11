@@ -18,7 +18,7 @@ services:
             - node-net
 
     client:
-        image: 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-frontend-ecr:$GITHUB_SHA
+        image: 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-frontend-ecr:$APP_TAG
         container_name: reactjs
         expose:
             - 3000
@@ -33,7 +33,7 @@ services:
             - server
         
     server:
-        image: 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-backend-ecr:$GITHUB_SHA
+        image: 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-backend-ecr:$APP_TAG
         container_name: nodejs
         expose:
             - 5000

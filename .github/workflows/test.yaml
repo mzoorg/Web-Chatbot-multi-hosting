@@ -1,31 +1,37 @@
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
 
-  build:
-    permissions:
-      id-token: write # This is required for requesting the JWT
-    
+  deploy-app:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo Hello world!
+    - uses: actions/checkout@v4
 
-    - name: Checkout the repo
-      uses: actions/checkout@v4
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ secrets.AWS_ROLE_ECR_ACCESS }}
-        aws-region: us-east-2
-
-    - name: Login to Amazon ECR Private
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
-
-    - name: Test docker pull
+    - name: Prepare compose file with up-to-date envs
+      env:
+        APP_TAG="d23e745bd5d98bb2362e01a8b8a880538e492dd9"
       run: |
-        docker pull 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-backend-ecr:api-04
-        docker image ls
+        echo "APP_TAG is $APP_TAG"
+        envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
+    
+    - name: Copy compose file
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.DEPLOY_HOST  }}
+        username: ubuntu
+        key: ${{ secrets.SSH_KEY_PROD }}
+        source: "docker-compose.yaml"
+        target: /app/docker-compose.yaml
+
+    - name: Deploy app
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        host: ${{ secrets.DEPLOY_HOST  }}
+        username: ubuntu
+        key: ${{ secrets.SSH_KEY_PROD }}
+        script: |
+          cd /app
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 693373126778.dkr.ecr.us-east-2.amazonaws.com
+          docker compose up -d

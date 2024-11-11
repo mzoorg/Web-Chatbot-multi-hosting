@@ -22,6 +22,7 @@ jobs:
         working-directory: ./server
 
       - run: echo "Tests running for server"
+    if: "!contains(github.event.head_commit.message, '#skip_checks') && !contains(github.event.pull_request.title, '#skip_checks')"
 
   build:
     needs: tests
@@ -33,7 +34,6 @@ jobs:
     with:
       webchatbot-ecr-repo: ${{ matrix.repos_list }}
     secrets: inherit
-    if: "!contains(github.event.head_commit.message, '#skip_checks') && !contains(github.event.pull_request.title, '#skip_checks')"
 
   deploy-app:
     needs: [tests, build]
@@ -43,7 +43,11 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Prepare compose file with up-to-date envs
-      run: envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
+      env:
+        APP_TAG=$GITHUB_SHA
+      run: |
+        echo "APP_TAG is $APP_TAG"
+        envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
     
     - name: Copy compose file
       uses: appleboy/scp-action@v0.1.7
@@ -62,4 +66,5 @@ jobs:
         key: ${{ secrets.SSH_KEY_PROD }}
         script: |
           cd /app
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 693373126778.dkr.ecr.us-east-2.amazonaws.com
           docker compose up -d
