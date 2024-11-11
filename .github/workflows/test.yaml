@@ -24,7 +24,6 @@ jobs:
         key: ${{ secrets.SSH_KEY_PROD }}
         source: "./docker-compose.yaml"
         target: /app
-        strip_components: 1
 
     - name: Deploy app
       uses: appleboy/ssh-action@v1.1.0
