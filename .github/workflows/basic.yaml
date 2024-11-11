@@ -44,7 +44,7 @@ jobs:
 
     - name: Prepare compose file with up-to-date envs
       env:
-        APP_TAG=$GITHUB_SHA
+        APP_TAG=${{ github.sha }}
       run: |
         echo "APP_TAG is $APP_TAG"
         envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
