@@ -44,9 +44,8 @@ jobs:
 
     - name: Prepare compose file with up-to-date envs
       env:
-        APP_TAG=${{ github.sha }}
+        APP_TAG: ${{ github.sha }}
       run: |
-        echo "APP_TAG is $APP_TAG"
         envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
     
     - name: Copy compose file
@@ -55,8 +54,8 @@ jobs:
         host: ${{ secrets.DEPLOY_HOST  }}
         username: ubuntu
         key: ${{ secrets.SSH_KEY_PROD }}
-        source: "docker-compose.yaml"
-        target: /app/docker-compose.yaml
+        source: "./docker-compose.yaml"
+        target: /app
 
     - name: Deploy app
       uses: appleboy/ssh-action@v1.1.0
