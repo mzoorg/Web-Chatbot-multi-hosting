@@ -11,7 +11,7 @@ jobs:
 
     - name: Prepare compose file with up-to-date envs
       env:
-        APP_TAG="d23e745bd5d98bb2362e01a8b8a880538e492dd9"
+        APP_TAG: "d23e745bd5d98bb2362e01a8b8a880538e492dd9"
       run: |
         echo "APP_TAG is $APP_TAG"
         envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
