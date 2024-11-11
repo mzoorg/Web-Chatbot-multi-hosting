@@ -1,0 +1,46 @@
+version: "3"
+
+networks:
+  node-net:
+    external: false
+
+services:
+    web:
+        image: nginx
+        container_name: nginx-web
+        expose:
+            - 80
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 8080:80
+        networks:
+            - node-net
+
+    client:
+        image: 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-frontend-ecr:$GITHUB_SHA
+        container_name: reactjs
+        expose:
+            - 3000
+        env_file: "client.env"
+        networks:
+            - node-net
+        restart: on-failure
+        deploy:
+          restart_policy:
+            condition: on-failure
+        depends_on:
+            - server
+        
+    server:
+        image: 693373126778.dkr.ecr.us-east-2.amazonaws.com/webchatapp-backend-ecr:$GITHUB_SHA
+        container_name: nodejs
+        expose:
+            - 5000
+        env_file: "server.env"
+        networks:
+            - node-net
+        restart: on-failure
+        deploy:
+          restart_policy:
+            condition: on-failure

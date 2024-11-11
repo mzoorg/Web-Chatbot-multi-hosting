@@ -7,7 +7,7 @@ on:
     - master
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +24,7 @@ jobs:
       - run: echo "Tests running for server"
 
   build:
+    needs: tests
     strategy:
       matrix:
         repos_list: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
@@ -32,3 +33,30 @@ jobs:
     with:
       webchatbot-ecr-repo: ${{ matrix.repos_list }}
     secrets: inherit
+
+  deploy-app:
+    needs: [tests, build]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Prepare compose file with up-to-date envs
+      run: envsubst < "docker-compose-aws_nobuild.tmpl" > "docker-compose.yaml"
+    
+    - name: Copy compose file
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.DEPLOY_HOST  }}
+        username: ubuntu
+        key: ${{ secrets.SSH_KEY_PROD }}
+        source: "docker-compose.yaml"
+        target: /app/docker-compose.yaml
+
+    - name: Deploy app
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        host: ${{ secrets.DEPLOY_HOST  }}
+        username: ubuntu
+        key: ${{ secrets.SSH_KEY_PROD }}
+        script: |
+          cd /app
+          docker compose up -d
