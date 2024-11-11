@@ -41,7 +41,7 @@ securityMiddleware(app);
 
 
 // Routes
-app.use('/', [chatbotRoutes, interfaceRoutes, swaggerRoutes]);
+app.use('/api', [chatbotRoutes, interfaceRoutes, swaggerRoutes]);
 
 // catch 404
 app.use((req, res) =>

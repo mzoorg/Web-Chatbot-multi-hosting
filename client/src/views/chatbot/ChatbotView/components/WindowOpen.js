@@ -5,7 +5,7 @@ export const WindowOpen = () => {
   const left = window.innerWidth - width;
 
   window.open(
-    `${process.env.REACT_APP_API_URL}/chatbot`,
+    `${process.env.REACT_APP_API_URL}/api/chatbot`,
     'menubar=no, resizable=no, scrollbars=no, status=no, location=no',
     `height=${height}, width=${width}, left=${left}, top=${top}`
   );

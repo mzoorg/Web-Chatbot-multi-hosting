@@ -1,5 +1,3 @@
-
-
 function perguntar() {
   const Input = document.getElementById('input');
   const question = Input.value.toString().trim();
@@ -10,7 +8,7 @@ function perguntar() {
   msgLines = msgLines.replace('<a href="#" id="end">', '');
 
   const http = new XMLHttpRequest();
-  http.open('GET', `/get-all-chatbot?input=${question}&activate=1`, true);
+  http.open('GET', `/api/get-all-chatbot?input=${question}&activate=1`, true);
   http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
   http.onreadystatechange = function () {

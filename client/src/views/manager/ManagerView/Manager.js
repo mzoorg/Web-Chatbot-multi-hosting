@@ -55,7 +55,7 @@ const Manager = ({ open, onClose }) => {
         upgrade: false
       });
       try {
-        const res = await api.get('/get-view-chatbot');
+        const res = await api.get('/api/get-view-chatbot');
 
         setData(res.data.message);
         setLoading(false);
@@ -71,7 +71,7 @@ const Manager = ({ open, onClose }) => {
 
   const handleRowUpdate = async (newData, oldData, resolve) => {
     setTimeout(() => setAlert({ message: null, variant: null }), 4000);
-    const { status } = await api.put('/update-chatbot', newData);
+    const { status } = await api.put('/api/update-chatbot', newData);
 
     if (status === 200) {
       const dataUpdate = [...data];

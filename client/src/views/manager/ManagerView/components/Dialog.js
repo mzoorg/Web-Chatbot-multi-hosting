@@ -49,7 +49,7 @@ const Users = ({ open, onClose }) => {
     setTimeout(() => setAlert({ message: null, variant: null }), 4000);
 
     try {
-      await api.post('/store-chatbot', state);
+      await api.post('/api/store-chatbot', state);
 
       setAlert({
         message: 'Success in adding Question!',

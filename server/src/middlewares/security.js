@@ -58,7 +58,7 @@ const securityMiddleware = (app) => {
   app.use(helmet.dnsPrefetchControl({ allow: false }));
 
   // https://github.com/helmetjs/referrer-policy
-  app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+  // app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 
   // https://helmetjs.github.io/docs/expect-ct/
   app.use(
