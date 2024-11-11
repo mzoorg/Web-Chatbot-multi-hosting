@@ -22,7 +22,7 @@ jobs:
         host: ${{ secrets.DEPLOY_HOST  }}
         username: ubuntu
         key: ${{ secrets.SSH_KEY_PROD }}
-        source: "docker-compose.yaml"
+        source: "./docker-compose.yaml"
         target: /app
 
     - name: Deploy app
