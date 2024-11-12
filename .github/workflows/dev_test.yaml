@@ -1,0 +1,23 @@
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        webchatbot-ecr-repo: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
+        include:
+          - webchatbot-ecr-repo: webchatapp-backend-ecr
+            tier: server
+          - webchatbot-ecr-repo: webchatapp-frontend-ecr
+            tier: client
+
+    steps:
+    - run: echo Hello world!
+
+    - name: Echo envs
+      run: echo "ECR repo is ${{ matrix.webchatbot-ecr-repo }} and TIER is ${{ matrix.tier }}"
