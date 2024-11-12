@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "npm run seed && npm run start"]
+CMD ["sh", "-c", "npm run seed && node ./src/index.js"]
