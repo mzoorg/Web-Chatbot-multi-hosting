@@ -4,6 +4,9 @@ on:
       webchatbot-ecr-repo:
         required: true
         type: string
+      tier:
+        required: true
+        type: string        
 
 jobs:
   reusable_build_job:
@@ -31,5 +34,5 @@ jobs:
         REPOSITORY: ${{ inputs.webchatbot-ecr-repo }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build --file ./client/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ./client
+        docker build --file ./${{ inputs.tier }}/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ./${{ inputs.tier }}
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG

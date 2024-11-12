@@ -28,11 +28,18 @@ jobs:
     needs: tests
     strategy:
       matrix:
-        repos_list: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
+        ecr_repo: ["webchatapp-backend-ecr", "webchatapp-frontend-ecr"]
+        include:
+          - ecr_repo: webchatapp-backend-ecr
+            tier: server
+          - ecr_repo: webchatapp-frontend-ecr
+            tier: client
+
     name: Build, tag, and push app docker images
     uses: ./.github/workflows/buildapp.yaml
     with:
-      webchatbot-ecr-repo: ${{ matrix.repos_list }}
+      webchatbot-ecr-repo: ${{ matrix.ecr_repo }}
+      tier: ${{ matrix.tier }}
     secrets: inherit
 
   deploy-app:
